@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>SISTEMA DE AUTORIZACIONES</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #014421;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #014421;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #mensajeExito {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: green;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SISTEMA DE AUTORIZACIONES</h1>
+    <form id="formulario">
+      <label>Nombre del alumno</label>
+      <input type="text" name="nombreAlumno" required />
+
+      <label>Año</label>
+      <select name="año" required>
+        <option value="1°">1°</option>
+        <option value="2°">2°</option>
+        <option value="3°">3°</option>
+        <option value="4°">4°</option>
+        <option value="5°">5°</option>
+      </select>
+
+      <label>División</label>
+      <select name="division" required>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+      </select>
+
+      <label>Turno</label>
+      <select name="turno" required>
+        <option value="Mañana">Turno Mañana</option>
+        <option value="Tarde">Turno Tarde</option>
+      </select>
+
+      <label>Nombre del tutor</label>
+      <input type="text" name="nombreTutor" required />
+
+      <label>Email del tutor</label>
+      <input type="email" name="emailTutor" required />
+
+      <label>Actividades autorizadas</label>
+      <textarea name="actividadesSeleccionadas" rows="3"></textarea>
+
+      <label>Descripción de la actividad</label>
+      <textarea name="descripcionActividad" rows="3"></textarea>
+
+      <label>
+        <input type="checkbox" required />
+        Acepto los términos legales
+      </label>
+
+      <button type="submit">Enviar autorización</button>
+      <div id="mensajeExito"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("formulario").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const plainFormData = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxqNMDK8borWKavtat_drLVD4VC-yqfgbDgrhGi9nRKYWccMT9kXbjFRn11jvWmDOvA/exec", {
+          method: "POST",
+          body: JSON.stringify(plainFormData),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (response.ok) {
+          document.getElementById("mensajeExito").textContent = "✅ Autorización enviada con éxito.";
+          this.reset();
+        } else {
+          document.getElementById("mensajeExito").textContent = "❌ Error en la respuesta del servidor.";
+        }
+      } catch (error) {
+        document.getElementById("mensajeExito").textContent = "❌ No se pudo enviar la autorización.";
+        console.error("Error al enviar:", error);
+      }
+    });
+  </script>
+</body>
+</html>
