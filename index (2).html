@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>SISTEMA DE AUTORIZACIONES</title>
+  <style>
+    body { font-family: Arial,sans-serif; background:#eef4f7; padding:2rem; }
+    .container { background:white; max-width:800px; margin:auto; padding:2rem; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+    h1 { text-align:center; color:#014421; }
+    label { font-weight:bold; margin-top:1rem; display:block; }
+    input,select,textarea { width:100%; padding:0.5rem; margin-top:0.3rem; margin-bottom:1rem; border:1px solid #ccc; border-radius:4px; }
+    button { background:#014421; color:white; padding:0.7rem 1.5rem; border:none; border-radius:4px; cursor:pointer; margin-top:1rem; }
+    #mensaje { text-align:center; margin-top:1rem; font-weight:bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SISTEMA DE AUTORIZACIONES</h1>
+    <form id="formulario">
+      <label>Nombre del alumno</label><input type="text" name="nombreAlumno" required>
+      <label>Año</label><select name="año" required><option>1°</option><option>2°</option><option>3°</option><option>4°</option><option>5°</option></select>
+      <label>División</label><select name="division" required><option>A</option><option>B</option><option>C</option><option>D</option></select>
+      <label>Turno</label><select name="turno" required><option>Mañana</option><option>Tarde</option></select>
+      <label>Nombre del tutor</label><input type="text" name="nombreTutor" required>
+      <label>Email del tutor</label><input type="email" name="emailTutor" required>
+      <label>Actividades autorizadas</label><textarea name="actividadesSeleccionadas"></textarea>
+      <label>Descripción de la actividad</label><textarea name="descripcionActividad"></textarea>
+      <label><input type="checkbox" required> Acepto los términos legales</label>
+      <button type="submit">Enviar autorización</button>
+      <div id="mensaje"></div>
+    </form>
+  </div>
+  <script>
+    document.getElementById('formulario').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const data = new FormData(this);
+      try {
+        const res = await fetch('https://script.google.com/macros/s/AKfycbxqNMDK8borWKavtat_drLVD4VC-yqfgbDgrhGi9nRKYWccMT9kXbjFRn11jvWmDOvA/exec', {
+          method:'POST',
+          body:data
+        });
+        if(res.ok) { 
+          document.getElementById('mensaje').textContent = '✅ Autorización enviada con éxito';
+          this.reset();
+        } else {
+          document.getElementById('mensaje').textContent = '❌ Error al enviar. Intentá de nuevo';
+        }
+      } catch(err) {
+        document.getElementById('mensaje').textContent = '❌ No se pudo enviar la autorización.';
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
